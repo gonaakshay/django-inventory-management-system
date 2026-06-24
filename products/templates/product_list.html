@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a href="{% url 'product_create' %}" class="btn">
+    Add Product
+</a>
+
+<a href="{% url 'export_products_excel' %}" class="btn">
+    Export Excel
+</a>
+
+<br><br>
+
+<form method="GET">
+
+    <input
+    type="text"
+    name="search"
+    placeholder="Search Product..."
+    value="{{ search|default:'' }}">
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+<br>
+
+<table>
+
+<tr>
+
+    <th>ID</th>
+    <th>Name</th>
+    <th>Category</th>
+    <th>Price</th>
+    <th>Quantity</th>
+    <th>Actions</th>
+
+</tr>
+
+{% for product in products %}
+
+<tr>
+
+    <td>{{ product.id }}</td>
+    <td>{{ product.product_name }}</td>
+    <td>{{ product.category }}</td>
+    <td>₹{{ product.price }}</td>
+    <td>{{ product.quantity }}</td>
+
+    <td>
+
+        <a
+        href="{% url 'product_update' product.id %}"
+        class="btn">
+        Edit
+        </a>
+
+        <a
+        href="{% url 'product_delete' product.id %}"
+        class="btn">
+        Delete
+        </a>
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br><br>
+
+<div class="pagination">
+
+    {% if products.has_previous %}
+
+        <a href="?search={{ search|default:'' }}&page=1">
+            First
+        </a>
+
+        <a href="?search={{ search|default:'' }}&page={{ products.previous_page_number }}">
+            Previous
+        </a>
+
+    {% endif %}
+
+    <span>
+
+        Page {{ products.number }}
+
+        of
+
+        {{ products.paginator.num_pages }}
+
+    </span>
+
+    {% if products.has_next %}
+
+        <a href="?search={{ search|default:'' }}&page={{ products.next_page_number }}">
+            Next
+        </a>
+
+        <a href="?search={{ search|default:'' }}&page={{ products.paginator.num_pages }}">
+            Last
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
